@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 
 @Composable
 fun SetupNavHostScreen(navController: NavHostController) {
+    val viewModel = hiltViewModel<NavigationViewModel>()
     Scaffold(
 //        topBar = {
 //            TopAppBar(
@@ -28,11 +30,11 @@ fun SetupNavHostScreen(navController: NavHostController) {
 //            )
 //        },
         bottomBar = {
-            BottomBar(navController = navController)
+            if (viewModel.toDo.isNotEmpty()) {BottomBar(navController = navController)}
         },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
-                SetupNavHost(navController = navController)
+                SetupNavHost(navController = navController, viewModel)
             }
         }
     )

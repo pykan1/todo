@@ -27,13 +27,13 @@ sealed class Screens(val rout: String, val icon: ImageVector) {
 }
 
 @Composable
-fun SetupNavHost (navController: NavHostController) {
+fun SetupNavHost (navController: NavHostController, viewModel: NavigationViewModel) {
     NavHost(
         navController = navController,
-        startDestination = Screens.Greeting.rout
+        startDestination = if (viewModel.toDo.isEmpty()) Screens.Greeting.rout else Screens.Calendar.rout
     ) {
         composable(route = Screens.Greeting.rout) {
-            GreetingScreen()
+            GreetingScreen(navController)
         }
         composable(route = Screens.Calendar.rout) {
             Log.d("11", "MainScreen")
