@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.todo.data.local.model.Day
+import com.example.todo.data.local.model.ToDo
 
 @Dao
 interface DayRepository {
@@ -15,5 +16,11 @@ interface DayRepository {
 
     @Query("select * from day")
     suspend fun getAllDay(): List<Day>
+
+    @Query("UPDATE day SET priorityToDos=:newPriority WHERE date=:date")
+    suspend fun changePriorityToDos(newPriority: List<ToDo>, date: String)
+
+    @Query("UPDATE day SET toDos=:newToDos WHERE date=:date")
+    suspend fun changeToDos(newToDos: List<ToDo>, date: String)
 
 }

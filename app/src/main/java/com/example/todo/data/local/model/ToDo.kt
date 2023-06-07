@@ -9,6 +9,6 @@ data class ToDo(
     val todoId: Long = 0,
     val title: String,
     val date: String,
-    val priority: Boolean,
-    val done: Boolean
+    val priority: Boolean = false,
+    val done: Boolean = false
 )

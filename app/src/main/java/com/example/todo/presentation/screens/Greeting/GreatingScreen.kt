@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import com.example.todo.R
+import com.example.todo.presentation.navigation.NavigationViewModel
 import com.example.todo.presentation.navigation.Screens
 import com.example.todo.presentation.ui.component.GreetingRow
 import com.example.todo.presentation.ui.theme.DarkPurple
@@ -50,7 +51,7 @@ import java.nio.file.WatchEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GreetingScreen(navController: NavController) {
+fun GreetingScreen(navController: NavController, viewModel: NavigationViewModel) {
     Column(
         modifier = Modifier
             .background(Color.White)
@@ -87,6 +88,7 @@ fun GreetingScreen(navController: NavController) {
                 navController.navigate(Screens.Main.rout) {
                     popUpTo(0)
                 }
+                viewModel.isReady = true
             },
             modifier = Modifier
                 .padding(horizontal = 15.dp)

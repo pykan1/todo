@@ -1,9 +1,13 @@
 package com.example.todo.presentation.screens.Main
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.data.local.model.Day
+import com.example.todo.data.local.model.ToDo
 import com.example.todo.domain.usecase.GetDayByDateUseCase
 import com.example.todo.domain.usecase.InsertDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +26,7 @@ class MainViewModel @Inject constructor(
     private val month = calendar.get(Calendar.MONTH) + 1 // Важно: значения месяца начинаются с 0, поэтому нужно добавить 1
     private val year = calendar.get(Calendar.YEAR)
     private val currentDate = "$dayOfMonth-$month-$year"
+    var isAdd by mutableStateOf(false)
     var dayState = MutableStateFlow(Day())
 
     init {
@@ -40,6 +45,11 @@ class MainViewModel @Inject constructor(
             }
         }
     }
+
+    fun changeIsAdd() {
+        isAdd = !isAdd
+    }
+
 
 
 

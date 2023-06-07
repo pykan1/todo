@@ -1,5 +1,6 @@
 package com.example.todo.presentation.navigation
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.wrapContentSize
@@ -12,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.todo.presentation.ui.theme.NavigationBar
 
 @Composable
 fun BottomBar(navController: NavHostController) {
@@ -49,11 +52,11 @@ fun RowScope.AddItem(
 ) {
     BottomNavigationItem(
         modifier = Modifier
-            .background(color = Color.Black)
+            .background(color = NavigationBar)
             .wrapContentSize(),
         icon = {
-            Icon(
-                imageVector = screen.icon,
+            Image(
+                painter = painterResource(id = screen.icon),
                 contentDescription = "Navigation Icon"
             )
         },
