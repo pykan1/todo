@@ -11,7 +11,6 @@ interface DayRepository {
     suspend fun insertDay(day: Day)
 
     @Query("select * from day WHERE date=:date")
-    suspend fun getDatByDate(date: String): Day
-
+    suspend fun getDayByDate(date: String): Day
 
 }
