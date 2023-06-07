@@ -10,4 +10,6 @@ class DayRepositoryImpl @Inject constructor(
     suspend fun insertDay(day: Day) = dayRepository.insertDay(day)
 
     suspend fun getDayByDate(date: String) = dayRepository.getDayByDate(date)
+
+    suspend fun getAllDay(): List<Day> = dayRepository.getAllDay()
 }

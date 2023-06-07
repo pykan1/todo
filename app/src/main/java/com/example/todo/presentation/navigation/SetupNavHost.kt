@@ -17,7 +17,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.todo.presentation.screens.Greeting.GreetingScreen
-import com.example.todo.presentation.screens.Greeting.Main.MainScreen
+import com.example.todo.presentation.screens.Main.MainScreen
+
 
 sealed class Screens(val rout: String, val icon: ImageVector) {
     object Greeting : Screens(rout = "greeting_screen", Icons.Default.Start)
@@ -25,7 +26,6 @@ sealed class Screens(val rout: String, val icon: ImageVector) {
     object Main : Screens(rout = "main_screen", Icons.Default.Domain)
     object Calendar : Screens(rout = "calendar_screen", Icons.Default.Home)
     object Emotion : Screens(rout = "emotion_screen", Icons.Default.Home)
-    object ListScreen : Screens(rout = "list_screen", Icons.Default.AccountBox)
     object Editor : Screens(rout = "editor_screen", Icons.Default.Edit)
     object Settings : Screens(rout = "settings_screen", Icons.Default.LocationOn)
 }
@@ -34,7 +34,7 @@ sealed class Screens(val rout: String, val icon: ImageVector) {
 fun SetupNavHost (navController: NavHostController, viewModel: NavigationViewModel) {
     NavHost(
         navController = navController,
-        startDestination = if (viewModel.toDo.isEmpty()) Screens.Greeting.rout else Screens.Calendar.rout
+        startDestination = if (viewModel.days.isEmpty()) Screens.Greeting.rout else Screens.Calendar.rout
     ) {
         composable(route = Screens.Greeting.rout) {
             GreetingScreen(navController)
@@ -43,12 +43,9 @@ fun SetupNavHost (navController: NavHostController, viewModel: NavigationViewMod
             MainScreen(navController)
         }
         composable(route = Screens.Calendar.rout) {
-            Log.d("11", "MainScreen")
-        }
-        composable(route = Screens.Emotion.rout) {
 
         }
-        composable(route = Screens.ListScreen.rout) {
+        composable(route = Screens.Emotion.rout) {
 
         }
         composable(route = Screens.Editor.rout) {

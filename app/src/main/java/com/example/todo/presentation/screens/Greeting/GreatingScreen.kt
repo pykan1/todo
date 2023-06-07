@@ -84,7 +84,7 @@ fun GreetingScreen(navController: NavController) {
 
         Button(
             onClick = {
-                navController.navigate(Screens.Calendar.rout) {
+                navController.navigate(Screens.Main.rout) {
                     popUpTo(0)
                 }
             },

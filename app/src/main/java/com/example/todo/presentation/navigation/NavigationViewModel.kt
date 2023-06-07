@@ -1,15 +1,16 @@
 package com.example.todo.presentation.navigation
 
 import androidx.lifecycle.ViewModel
+import com.example.todo.domain.usecase.GetAllDayUseCase
 import com.example.todo.domain.usecase.GetAllToDoUseCase
+import com.example.todo.domain.usecase.InsertDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class NavigationViewModel @Inject constructor(
-    getAllToDoUseCase: GetAllToDoUseCase
+    getAllDayUseCase: GetAllDayUseCase
 ): ViewModel() {
-    val toDo = runBlocking { getAllToDoUseCase.invoke() }
-
+    val days = runBlocking { getAllDayUseCase.invoke() }
 }

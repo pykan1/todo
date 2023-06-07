@@ -13,4 +13,7 @@ interface DayRepository {
     @Query("select * from day WHERE date=:date")
     suspend fun getDayByDate(date: String): Day
 
+    @Query("select * from day")
+    suspend fun getAllDay(): List<Day>
+
 }

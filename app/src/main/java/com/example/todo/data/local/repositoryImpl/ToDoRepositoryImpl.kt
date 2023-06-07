@@ -11,6 +11,8 @@ class ToDoRepositoryImpl @Inject constructor(
 ){
     suspend fun getAllToDo(): List<ToDo> = toDoRepository.getAllToDo()
 
+    suspend fun insertToDo(toDo: ToDo) = toDoRepository.insertToDo(toDo)
+
     suspend fun getToDoById(todoId: Long): ToDo = toDoRepository.getToDoById(todoId)
 
     suspend fun changeDone(todoId: Long, new: Boolean) = toDoRepository.changeDone(todoId, new)

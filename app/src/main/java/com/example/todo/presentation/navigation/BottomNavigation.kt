@@ -23,7 +23,7 @@ fun BottomBar(navController: NavHostController) {
     val screens = listOf(
         Screens.Calendar,
         Screens.Emotion,
-        Screens.ListScreen,
+        Screens.Main,
         Screens.Editor,
         Screens.Settings
     )

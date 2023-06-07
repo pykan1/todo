@@ -30,7 +30,7 @@ fun SetupNavHostScreen(navController: NavHostController) {
 //            )
 //        },
         bottomBar = {
-            if (viewModel.toDo.isNotEmpty()) {BottomBar(navController = navController)}
+            if (viewModel.days.isNotEmpty()) {BottomBar(navController = navController)}
         },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
