@@ -1,7 +1,9 @@
 package com.example.todo.presentation.screens.Main
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +41,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,9 +51,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.todo.R
 import com.example.todo.presentation.navigation.Screens
 import com.example.todo.presentation.ui.component.ToDoRow.ToDoRow
 import com.example.todo.presentation.ui.theme.BasicBox
+import com.example.todo.presentation.ui.theme.DarkPurple
 import com.example.todo.presentation.ui.theme.PriorityBox
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -138,7 +145,9 @@ fun MainScreen(navController: NavController) {
             }
 
             Spacer(modifier = Modifier.size(30.dp))
-
+            if (viewModel.isAdd) {
+                AddItem(mainViewModel = viewModel)
+            }
             Box(
                 modifier = Modifier
                     .padding(horizontal = 15.dp)
@@ -163,7 +172,7 @@ fun MainScreen(navController: NavController) {
                         verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         itemsIndexed(
-                            dayState.priorityToDos
+                            dayState.toDos
                         ) { _, toDo ->
                             ToDoRow(toDo = toDo)
                         }
@@ -179,25 +188,44 @@ fun MainScreen(navController: NavController) {
 fun AddItem(mainViewModel: MainViewModel) {
     val viewModel = hiltViewModel<AddViewModel>()
     Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp)
+            .heightIn(50.dp)
+            .background(DarkPurple),
+        horizontalArrangement = Arrangement.spacedBy(5.dp)
 
     ) {
-
-
-        Box(modifier = Modifier) {
-            Card(modifier = Modifier, shape = RoundedCornerShape(30.dp)) {
-                TextField(
-                    value = viewModel.title, {
-                        viewModel.setText(it)
-                    },
-                    placeholder = { Text(text = "Введите задачу...") },
-                    colors = TextFieldDefaults.textFieldColors(
-                        textColor = Color.Black,
-                    ),
-                    textStyle = TextStyle(fontSize = 18.sp),
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+        Card(
+            modifier = Modifier
+                .padding(start = 5.dp, end = 40.dp, bottom = 5.dp, top = 5.dp),
+            shape = RoundedCornerShape(30.dp)
+        ) {
+            TextField(
+                value = viewModel.title, {
+                    viewModel.setText(it)
+                },
+                placeholder = { Text(text = "Введите задачу...") },
+                colors = TextFieldDefaults.textFieldColors(
+                    textColor = Color.Black,
+                ),
+                textStyle = TextStyle(fontSize = 18.sp),
+                singleLine = true,
+                modifier = Modifier
+            )
         }
+
+        Image(
+            painter = painterResource(id = R.drawable.done),
+            contentDescription = "",
+            modifier = Modifier
+                .clickable {
+                    mainViewModel.changeIsAdd()
+                    viewModel.addToDo(mainViewModel)
+                }
+                .padding(5.dp)
+                .size(65.dp)
+        )
+
     }
 }

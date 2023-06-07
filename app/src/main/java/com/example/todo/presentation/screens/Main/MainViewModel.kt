@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.data.local.model.Day
@@ -28,6 +30,13 @@ class MainViewModel @Inject constructor(
     private val currentDate = "$dayOfMonth-$month-$year"
     var isAdd by mutableStateOf(false)
     var dayState = MutableStateFlow(Day())
+    private val _toDos = MutableLiveData<List<ToDo>>()
+    private val _priority = MutableLiveData<List<ToDo>>()
+    val toDos: LiveData<List<ToDo>>
+        get() = _toDos
+
+    val priority: LiveData<List<ToDo>>
+        get() = _priority
 
     init {
         viewModelScope.launch {
@@ -38,13 +47,19 @@ class MainViewModel @Inject constructor(
                     date = currentDate
                 )
                 dayState.emit(day)
+                _toDos.postValue(emptyList())
+                _priority.postValue(emptyList())
                 insertDayUseCase.invoke(day)
 
             } else {
+                _toDos.postValue(day.toDos)
+                _priority.postValue(day.priorityToDos)
             dayState.emit(day)
             }
         }
     }
+
+
 
     fun changeIsAdd() {
         isAdd = !isAdd

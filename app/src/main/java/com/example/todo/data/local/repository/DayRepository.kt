@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.example.todo.data.local.model.Day
 import com.example.todo.data.local.model.ToDo
+import org.jetbrains.annotations.NotNull
 
 @Dao
 interface DayRepository {
@@ -18,9 +19,9 @@ interface DayRepository {
     suspend fun getAllDay(): List<Day>
 
     @Query("UPDATE day SET priorityToDos=:newPriority WHERE date=:date")
-    suspend fun changePriorityToDos(newPriority: List<ToDo>, date: String)
+    suspend fun changePriorityToDos(newPriority: List<ToDo> = emptyList(), date: String)
 
     @Query("UPDATE day SET toDos=:newToDos WHERE date=:date")
-    suspend fun changeToDos(newToDos: List<ToDo>, date: String)
+    suspend fun changeToDos(newToDos: List<ToDo> = emptyList(), date: String)
 
 }
