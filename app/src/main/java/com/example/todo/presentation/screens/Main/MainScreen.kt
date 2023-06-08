@@ -65,6 +65,7 @@ import com.example.todo.presentation.ui.theme.PriorityBox
 @Composable
 fun MainScreen(navController: NavController) {
     val viewModel = hiltViewModel<MainViewModel>()
+    viewModel.initDay()
     val dayState by viewModel.dayState.collectAsState()
     val toDos = viewModel.toDos.observeAsState(listOf()).value
     val localFocusManager = LocalFocusManager.current
@@ -154,7 +155,7 @@ fun MainScreen(navController: NavController) {
                         itemsIndexed(
                             toDos
                         ) { _, toDo ->
-                            ToDoRow(toDo = toDo, viewModel)
+                            ToDoRow(toDo = toDo, mainViewModel = viewModel)
                         }
                     }
                 }

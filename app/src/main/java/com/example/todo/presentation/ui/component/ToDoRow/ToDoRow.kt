@@ -22,10 +22,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.todo.R
 import com.example.todo.data.local.model.ToDo
+import com.example.todo.presentation.screens.Calendar.CalendarViewModel
 import com.example.todo.presentation.screens.Main.MainViewModel
 
 @Composable
-fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel) {
+fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null) {
     val viewModel = ToDoRowModel()
     viewModel.initToDo(toDo)
     val toDoState by viewModel.stateToDo.collectAsState()
@@ -39,7 +40,8 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel) {
             modifier = Modifier
                 .size(25.dp)
                 .clickable {
-                viewModel.changeIsDone(mainViewModel = mainViewModel)
+                    mainViewModel?.let { viewModel.changeIsDone(mainViewModel = it) }
+                    calendarViewModel?.let {viewModel.changeIsDone(calendarViewModel = it) }
             },
             painter = painterResource(id = if (toDoState.done) R.drawable.done else R.drawable.notdone),
             contentDescription = "isDone"
@@ -48,7 +50,7 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel) {
             modifier = Modifier
                 .width(170.dp)
                 .clickable {
-                    viewModel.changeIsPriority(mainViewModel)
+                    viewModel.changeIsPriority(mainViewModel, calendarViewModel)
                 },
             text = toDoState.title,
             fontSize = 16.sp,
@@ -64,7 +66,7 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel) {
                     .padding(start = 30.dp)
                     .size(25.dp)
                     .clickable {
-                        viewModel.changeIsPriority(mainViewModel)
+                        viewModel.changeIsPriority(mainViewModel , calendarViewModel)
                     }
             )
         }

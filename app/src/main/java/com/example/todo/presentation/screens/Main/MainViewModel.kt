@@ -16,6 +16,7 @@ import com.example.todo.domain.usecase.GetCurrentDateUseCase
 import com.example.todo.domain.usecase.GetDayByDateUseCase
 import com.example.todo.domain.usecase.InsertDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -36,12 +37,11 @@ class MainViewModel @Inject constructor(
         get() = _toDos
 
 
-    init {
+    fun initDay() {
         viewModelScope.launch {
             Log.d("11", getAllDayUseCase.invoke().toString())
             var day = getDayByDateUseCase.invoke(date = currentDate)
             if (day == null) {
-                Log.d("11", "new day")
                 day = Day(
                     date = currentDate
                 )
@@ -59,8 +59,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             getDayByDateUseCase.invoke(currentDate).let {
                 val newToDos = it.toDos + ToDo(title = title, date = dayState.value.date)
-                Log.d("11", newToDos.toString())
-                Log.d("11", _toDos.value.toString())
                 changeToDosUseCase.invoke(newToDos, date = currentDate)
                 _toDos.postValue(newToDos)
             }
@@ -70,14 +68,15 @@ class MainViewModel @Inject constructor(
     fun updateToDo(toDo: ToDo) {
         viewModelScope.launch {
             //getDayByDateUseCase.invoke(date = currentDate)
-            _toDos.postValue(_toDos.value!!.map {
+            val newToDos = _toDos.value!!.map {
                 if (it.title == toDo.title) {
                     toDo
                 } else {
                     it
                 }
-            })
-            changeToDosUseCase.invoke(_toDos.value!!, currentDate)
+            }
+            changeToDosUseCase.invoke(newToDos, currentDate)
+            _toDos.postValue(newToDos)
         }
     }
 

@@ -2,6 +2,7 @@ package com.example.todo.presentation.screens.Calendar
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +20,9 @@ import com.example.todo.domain.usecase.GetDayByDateUseCase
 import com.example.todo.domain.usecase.InsertDayUseCase
 import com.example.todo.presentation.screens.Main.MainViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -29,19 +32,15 @@ class CalendarViewModel @Inject constructor(
     private val changeToDosUseCase: ChangeToDosUseCase,
     private val insertDayUseCase: InsertDayUseCase,
     private val getAllDayUseCase: GetAllDayUseCase,
-    val mainViewModel: MainViewModel
 ) : ViewModel() {
     val calendar = Calendar.getInstance()
     var day by mutableStateOf(0)
+    var isAdd by mutableStateOf(false)
+
 
     private val _toDos = MutableLiveData<List<ToDo>>()
     val toDos: LiveData<List<ToDo>>
         get() = _toDos
-
-
-    init {
-        Log.d("11", toDos.toString())
-    }
 
 
     fun getDate(dayOfMonth: Int): String {
@@ -54,6 +53,7 @@ class CalendarViewModel @Inject constructor(
         Log.d("11", date)
         viewModelScope.launch {
             var day = getDayByDateUseCase.invoke(date)
+            Log.d("11", day.toDos.toString())
             if (day == null) {
                 Log.d("11", "new day")
                 day = Day(
@@ -66,4 +66,36 @@ class CalendarViewModel @Inject constructor(
             }
         }
     }
+
+    fun addToDo(title: String) {
+        viewModelScope.launch {
+            val date = getDate(day)
+            getDayByDateUseCase.invoke(date).let {
+                val newToDos = it.toDos + ToDo(title = title, date = date)
+                changeToDosUseCase.invoke(newToDos, date = date)
+                _toDos.postValue(newToDos)
+            }
+        }
+    }
+    fun updateToDo(toDo: ToDo) {
+        viewModelScope.launch {
+            //getDayByDateUseCase.invoke(date = currentDate)
+            val newToDos = _toDos.value!!.map {
+                if (it.title == toDo.title) {
+                    toDo
+                } else {
+                    it
+                }
+            }
+            changeToDosUseCase.invoke(newToDos, getDate(day))
+            _toDos.postValue(newToDos)
+        }
+    }
+
+    fun changeIsAdd() {
+        isAdd = !isAdd
+    }
+
+
+
 }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.data.local.model.ToDo
+import com.example.todo.presentation.screens.Calendar.CalendarViewModel
 import com.example.todo.presentation.screens.Main.MainViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class ToDoRowModel: ViewModel() {
         }
     }
 
-    fun changeIsDone(mainViewModel: MainViewModel) {
+    fun changeIsDone(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null) {
         viewModelScope.launch{
             stateToDo.emit(
                 ToDo(
@@ -33,11 +34,12 @@ class ToDoRowModel: ViewModel() {
                     done = !stateToDo.value.done
                 )
             )
-            mainViewModel.updateToDo(stateToDo.value)
+            mainViewModel?.updateToDo(stateToDo.value)
+            calendarViewModel?.updateToDo(stateToDo.value)
         }
     }
 
-    fun changeIsPriority(mainViewModel: MainViewModel) {
+    fun changeIsPriority(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null) {
         viewModelScope.launch{
             stateToDo.emit(
                 ToDo(
@@ -47,7 +49,8 @@ class ToDoRowModel: ViewModel() {
                     done = stateToDo.value.done
                 )
             )
-            mainViewModel.updateToDo(stateToDo.value)
+            mainViewModel?.updateToDo(stateToDo.value)
+            calendarViewModel?.updateToDo(stateToDo.value)
         }
     }
 }

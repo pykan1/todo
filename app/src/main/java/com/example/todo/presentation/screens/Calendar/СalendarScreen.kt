@@ -176,7 +176,7 @@ fun CalendarScreen(navController: NavController) {
                         itemsIndexed(
                             toDos
                         ) { _, toDo ->
-                            ToDoRow(toDo = toDo, mainViewModel)
+                            ToDoRow(toDo = toDo, calendarViewModel = viewModel)
                         }
                     }
                 }
