@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.todo.R
+import com.example.todo.presentation.screens.Calendar.CalendarScreen
 import com.example.todo.presentation.screens.Greeting.GreetingScreen
 import com.example.todo.presentation.screens.Main.MainScreen
 
@@ -38,7 +39,7 @@ fun SetupNavHost (navController: NavHostController, viewModel: NavigationViewMod
             MainScreen(navController)
         }
         composable(route = Screens.Calendar.rout) {
-
+            CalendarScreen(navController = navController)
         }
         composable(route = Screens.Emotion.rout) {
 

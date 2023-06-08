@@ -34,6 +34,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.todo.R
 import com.example.todo.presentation.navigation.Screens
+import com.example.todo.presentation.ui.component.Add.AddItem
 import com.example.todo.presentation.ui.component.ToDoRow.ToDoRow
 import com.example.todo.presentation.ui.theme.BasicBox
 import com.example.todo.presentation.ui.theme.DarkPurple
@@ -64,11 +66,13 @@ import com.example.todo.presentation.ui.theme.PriorityBox
 fun MainScreen(navController: NavController) {
     val viewModel = hiltViewModel<MainViewModel>()
     val dayState by viewModel.dayState.collectAsState()
+    val toDos = viewModel.toDos.observeAsState(listOf()).value
     val localFocusManager = LocalFocusManager.current
     Scaffold(
         modifier = Modifier.pointerInput(Unit) {
             detectTapGestures(onTap = {
                 localFocusManager.clearFocus()
+                viewModel.isAdd = false
             })
         },
         floatingActionButton = {
@@ -111,17 +115,29 @@ fun MainScreen(navController: NavController) {
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
             )
-
-            Box(
+            if (viewModel.isAdd) {
+                AddItem(mainViewModel = viewModel)
+            }
+            Column(
                 modifier = Modifier
-                    .padding(horizontal = 15.dp)
+                    .padding(horizontal = 15.dp, vertical = 10.dp)
                     .fillMaxWidth()
                     .heightIn(min = 220.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(BasicBox),
-                contentAlignment = Alignment.Center
+//                contentAlignment = Alignment.TopStart
             ) {
-                if (dayState.priorityToDos.isEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp, vertical = 10.dp),
+                    text = "Весь список дел на сегодня",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Start,
+                    fontSize = 21.sp,
+                )
+                if (toDos.isEmpty()) {
                     Text(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -132,99 +148,17 @@ fun MainScreen(navController: NavController) {
                 } else {
                     LazyColumn(
                         modifier = Modifier
-                            .padding(horizontal = 15.dp),
+                            .padding(horizontal = 15.dp, vertical = 7.dp),
                         verticalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
                         itemsIndexed(
-                            dayState.priorityToDos
+                            toDos
                         ) { _, toDo ->
-                            ToDoRow(toDo = toDo)
-                        }
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.size(30.dp))
-            if (viewModel.isAdd) {
-                AddItem(viewModel = viewModel)
-            }
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 15.dp)
-                    .fillMaxWidth()
-                    .heightIn(min = 220.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(PriorityBox),
-                contentAlignment = Alignment.Center
-            ) {
-                if (dayState.toDos.isEmpty()) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        text = "Сейчас тут пусто",
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                    )
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(horizontal = 15.dp),
-                        verticalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-                        itemsIndexed(
-                            dayState.toDos
-                        ) { _, toDo ->
-                            ToDoRow(toDo = toDo)
+                            ToDoRow(toDo = toDo, viewModel)
                         }
                     }
                 }
             }
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AddItem(viewModel: MainViewModel) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-            .heightIn(50.dp)
-            .background(DarkPurple),
-        horizontalArrangement = Arrangement.spacedBy(5.dp)
-
-    ) {
-        Card(
-            modifier = Modifier
-                .padding(start = 5.dp, end = 40.dp, bottom = 5.dp, top = 5.dp),
-            shape = RoundedCornerShape(30.dp)
-        ) {
-            TextField(
-                value = viewModel.title, {
-                    viewModel.setText(it)
-                },
-                placeholder = { Text(text = "Введите задачу...") },
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = Color.Black,
-                ),
-                textStyle = TextStyle(fontSize = 18.sp),
-                singleLine = true,
-                modifier = Modifier
-            )
-        }
-
-        Image(
-            painter = painterResource(id = R.drawable.done),
-            contentDescription = "",
-            modifier = Modifier
-                .clickable {
-                    viewModel.changeIsAdd()
-                    viewModel.addToDo()
-                }
-                .padding(5.dp)
-                .size(65.dp)
-        )
-
     }
 }

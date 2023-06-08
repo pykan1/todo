@@ -11,6 +11,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.todo.data.local.model.Day
 import com.example.todo.data.local.model.ToDo
 import com.example.todo.domain.usecase.ChangeToDosUseCase
+import com.example.todo.domain.usecase.GetAllDayUseCase
+import com.example.todo.domain.usecase.GetCurrentDateUseCase
 import com.example.todo.domain.usecase.GetDayByDateUseCase
 import com.example.todo.domain.usecase.InsertDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,24 +26,19 @@ class MainViewModel @Inject constructor(
     private val getDayByDateUseCase: GetDayByDateUseCase,
     private val insertDayUseCase: InsertDayUseCase,
     private val changeToDosUseCase: ChangeToDosUseCase,
-): ViewModel() {
-    private val calendar = Calendar.getInstance()
-    private val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-    private val month = calendar.get(Calendar.MONTH) + 1 // Важно: значения месяца начинаются с 0, поэтому нужно добавить 1
-    private val year = calendar.get(Calendar.YEAR)
-    private val currentDate = "$dayOfMonth-$month-$year"
+    private val getAllDayUseCase: GetAllDayUseCase
+) : ViewModel() {
+    private val currentDate = GetCurrentDateUseCase().invoke()
     var isAdd by mutableStateOf(false)
     var dayState = MutableStateFlow(Day())
     private val _toDos = MutableLiveData<List<ToDo>>()
-    private val _priority = MutableLiveData<List<ToDo>>()
     val toDos: LiveData<List<ToDo>>
         get() = _toDos
 
-    val priority: LiveData<List<ToDo>>
-        get() = _priority
 
     init {
         viewModelScope.launch {
+            Log.d("11", getAllDayUseCase.invoke().toString())
             var day = getDayByDateUseCase.invoke(date = currentDate)
             if (day == null) {
                 Log.d("11", "new day")
@@ -49,40 +46,38 @@ class MainViewModel @Inject constructor(
                     date = currentDate
                 )
                 dayState.emit(day)
-                _toDos.postValue(emptyList())
-                _priority.postValue(emptyList())
                 insertDayUseCase.invoke(day)
-
+                _toDos.postValue(day.toDos)
+                dayState.emit(day)
             } else {
                 _toDos.postValue(day.toDos)
-                _priority.postValue(day.priorityToDos)
-            dayState.emit(day)
             }
         }
     }
 
-    var title by mutableStateOf("")
-
-    fun setText(text: String) {
-        title = text
+    fun addToDo(title: String) {
+        viewModelScope.launch {
+            getDayByDateUseCase.invoke(currentDate).let {
+                val newToDos = it.toDos + ToDo(title = title, date = dayState.value.date)
+                Log.d("11", newToDos.toString())
+                Log.d("11", _toDos.value.toString())
+                changeToDosUseCase.invoke(newToDos, date = currentDate)
+                _toDos.postValue(newToDos)
+            }
+        }
     }
 
-    fun addToDo() {
+    fun updateToDo(toDo: ToDo) {
         viewModelScope.launch {
-            val toDo = ToDo(
-                title = title,
-                date = dayState.value.date
-            )
-            val newToDos = dayState.value.toDos + toDo
-            dayState.emit(
-                Day(
-                    date = dayState.value.date,
-                    motivation = dayState.value.date,
-                    priorityToDos = dayState.value.priorityToDos,
-                    toDos = newToDos
-                )
-            )
-            changeToDosUseCase.invoke(newToDos, dayState.value.date)
+            //getDayByDateUseCase.invoke(date = currentDate)
+            _toDos.postValue(_toDos.value!!.map {
+                if (it.title == toDo.title) {
+                    toDo
+                } else {
+                    it
+                }
+            })
+            changeToDosUseCase.invoke(_toDos.value!!, currentDate)
         }
     }
 

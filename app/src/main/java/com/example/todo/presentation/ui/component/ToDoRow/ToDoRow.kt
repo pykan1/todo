@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -19,29 +22,34 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.todo.R
 import com.example.todo.data.local.model.ToDo
+import com.example.todo.presentation.screens.Main.MainViewModel
 
 @Composable
-fun ToDoRow(toDo: ToDo) {
-    val viewModel = hiltViewModel<ToDoRowModel>()
+fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel) {
+    val viewModel = ToDoRowModel()
     viewModel.initToDo(toDo)
     val toDoState by viewModel.stateToDo.collectAsState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp),
+                .padding(horizontal = 15.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
-
-
     ) {
         Image(
-            modifier = Modifier.clickable {
-                viewModel.changeIsDone()
+            modifier = Modifier
+                .size(25.dp)
+                .clickable {
+                viewModel.changeIsDone(mainViewModel = mainViewModel)
             },
             painter = painterResource(id = if (toDoState.done) R.drawable.done else R.drawable.notdone),
             contentDescription = "isDone"
         )
-
         Text(
+            modifier = Modifier
+                .width(170.dp)
+                .clickable {
+                    viewModel.changeIsPriority(mainViewModel)
+                },
             text = toDoState.title,
             fontSize = 16.sp,
             color = Color.Black,
@@ -52,7 +60,12 @@ fun ToDoRow(toDo: ToDo) {
             Image(
                 painter = painterResource(id = R.drawable.star),
                 contentDescription = "Избранное",
-                modifier = Modifier.padding(end = 30.dp)
+                modifier = Modifier
+                    .padding(start = 30.dp)
+                    .size(25.dp)
+                    .clickable {
+                        viewModel.changeIsPriority(mainViewModel)
+                    }
             )
         }
     }
