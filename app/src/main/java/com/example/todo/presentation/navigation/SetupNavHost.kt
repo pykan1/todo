@@ -29,7 +29,7 @@ sealed class Screens(val rout: String, val icon: Int) {
 fun SetupNavHost (navController: NavHostController, viewModel: NavigationViewModel) {
     NavHost(
         navController = navController,
-        startDestination = if (viewModel.days.isEmpty()) Screens.Greeting.rout else Screens.Calendar.rout
+        startDestination = if (viewModel.days.isEmpty()) Screens.Greeting.rout else Screens.Main.rout
     ) {
         composable(route = Screens.Greeting.rout) {
             GreetingScreen(navController, viewModel)

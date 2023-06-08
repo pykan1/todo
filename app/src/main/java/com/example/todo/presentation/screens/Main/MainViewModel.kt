@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.data.local.model.Day
 import com.example.todo.data.local.model.ToDo
+import com.example.todo.domain.usecase.ChangeToDosUseCase
 import com.example.todo.domain.usecase.GetDayByDateUseCase
 import com.example.todo.domain.usecase.InsertDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getDayByDateUseCase: GetDayByDateUseCase,
-    private val insertDayUseCase: InsertDayUseCase
+    private val insertDayUseCase: InsertDayUseCase,
+    private val changeToDosUseCase: ChangeToDosUseCase,
 ): ViewModel() {
     private val calendar = Calendar.getInstance()
     private val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
@@ -59,13 +61,34 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    var title by mutableStateOf("")
 
+    fun setText(text: String) {
+        title = text
+    }
+
+    fun addToDo() {
+        viewModelScope.launch {
+            val toDo = ToDo(
+                title = title,
+                date = dayState.value.date
+            )
+            val newToDos = dayState.value.toDos + toDo
+            dayState.emit(
+                Day(
+                    date = dayState.value.date,
+                    motivation = dayState.value.date,
+                    priorityToDos = dayState.value.priorityToDos,
+                    toDos = newToDos
+                )
+            )
+            changeToDosUseCase.invoke(newToDos, dayState.value.date)
+        }
+    }
 
     fun changeIsAdd() {
         isAdd = !isAdd
     }
-
-
 
 
 }

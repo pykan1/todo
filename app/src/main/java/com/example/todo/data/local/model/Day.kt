@@ -12,7 +12,7 @@ data class Day(
     val date: String = "",
     var motivation: String = "",
     val priorityToDos: List<ToDo> = emptyList(),
-    val toDos: List<ToDo> = emptyList()
+    var toDos: List<ToDo> = emptyList()
 
 ) {
     companion object {

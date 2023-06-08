@@ -5,8 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.todo.domain.usecase.GetAllDayUseCase
-import com.example.todo.domain.usecase.GetAllToDoUseCase
-import com.example.todo.domain.usecase.InsertDayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject

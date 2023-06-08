@@ -146,7 +146,7 @@ fun MainScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.size(30.dp))
             if (viewModel.isAdd) {
-                AddItem(mainViewModel = viewModel)
+                AddItem(viewModel = viewModel)
             }
             Box(
                 modifier = Modifier
@@ -185,8 +185,7 @@ fun MainScreen(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddItem(mainViewModel: MainViewModel) {
-    val viewModel = hiltViewModel<AddViewModel>()
+fun AddItem(viewModel: MainViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -220,8 +219,8 @@ fun AddItem(mainViewModel: MainViewModel) {
             contentDescription = "",
             modifier = Modifier
                 .clickable {
-                    mainViewModel.changeIsAdd()
-                    viewModel.addToDo(mainViewModel)
+                    viewModel.changeIsAdd()
+                    viewModel.addToDo()
                 }
                 .padding(5.dp)
                 .size(65.dp)
