@@ -1,5 +1,6 @@
 package com.example.todo.presentation.screens.Calendar
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -59,6 +60,10 @@ fun CalendarScreen(navController: NavController) {
     val viewModel = hiltViewModel<CalendarViewModel>()
     val localFocusManager = LocalFocusManager.current
     val toDos = viewModel.toDos.observeAsState(listOf()).value
+    if (viewModel.day == 0) {
+        viewModel.day = calendar.get(Calendar.DAY_OF_MONTH)
+        viewModel.currentDay(viewModel.day)
+    }
     Scaffold(
         modifier = Modifier.pointerInput(Unit) {
             detectTapGestures(onTap = {
