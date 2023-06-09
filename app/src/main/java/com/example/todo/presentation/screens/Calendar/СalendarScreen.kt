@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.todo.presentation.screens.Main.MainViewModel
+import com.example.todo.presentation.ui.component.Add.AddItem
 import com.example.todo.presentation.ui.component.ToDoRow.ToDoRow
 import com.example.todo.presentation.ui.theme.BasicBox
 import com.example.todo.presentation.ui.theme.BorderColor
@@ -167,7 +168,11 @@ fun CalendarScreen(navController: NavController) {
                     }
                 }
             }
-            Spacer(modifier = Modifier.size(40.dp))
+            if (viewModel.isAdd) {
+                AddItem(calendarViewModel = viewModel)
+            } else {
+                Spacer(modifier = Modifier.size(40.dp))
+            }
             if (toDos.isEmpty()) {
                 Text(
                     modifier = Modifier

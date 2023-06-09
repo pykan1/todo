@@ -17,4 +17,6 @@ class DayRepositoryImpl @Inject constructor(
     suspend fun changePriority(newPriority: List<ToDo>, date: String) = dayRepository.changePriorityToDos(newPriority, date)
 
     suspend fun changeToDos(newToDos: List<ToDo>, date: String) = dayRepository.changeToDos(newToDos, date)
+
+    suspend fun changeEmotion(newEmotion: String, date: String) = dayRepository.changeEmotion(newEmotion, date)
 }

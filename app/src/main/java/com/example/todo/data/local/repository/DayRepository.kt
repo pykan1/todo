@@ -24,4 +24,7 @@ interface DayRepository {
     @Query("UPDATE day SET toDos=:newToDos WHERE date=:date")
     suspend fun changeToDos(newToDos: List<ToDo> = emptyList(), date: String)
 
+    @Query("UPDATE day SET emotion=:newEmotion WHERE date=:date")
+    suspend fun changeEmotion(newEmotion: String, date: String)
+
 }

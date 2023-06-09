@@ -1,0 +1,108 @@
+package com.example.todo.presentation.screens.Emotion
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.todo.domain.usecase.GetCurrentDateUseCase
+import com.example.todo.presentation.ui.component.EmotionItem.AddItem
+import com.example.todo.presentation.ui.component.EmotionItem.EmotionItem
+import com.example.todo.presentation.ui.theme.BasicBox
+import java.util.Calendar
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EmotionScreen(navController: NavController) {
+    val viewModel = hiltViewModel<EmotionViewModel>()
+    val currentDate = GetCurrentDateUseCase().invoke()
+    val days = viewModel.days.observeAsState(listOf()).value
+    val calendar = Calendar.getInstance()
+    val localFocusManager = LocalFocusManager.current
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+    if (viewModel.isAdd) {
+        AddItem(viewModel = viewModel)
+    } else {
+        Scaffold(
+            modifier = Modifier.pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    localFocusManager.clearFocus()
+                    viewModel.isAdd = false
+                })
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(BasicBox),
+                    onClick = { viewModel.changeIsAdd() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        tint = Color.White,
+                        contentDescription = "add"
+                    )
+                }
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(25.dp),
+                    text = "Трэкер настроения",
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                )
+                LazyColumn() {
+                    itemsIndexed(
+                        if (
+                        days.isNotEmpty() && days[0].emotion == ""
+                        )
+                        days.drop(1).filter { viewModel.compareDates(it.date, currentDate) <= 0 }
+                    else
+                        days.filter { viewModel.compareDates(it.date, currentDate) <= 0 }
+                    )
+                    { _, item ->
+                        EmotionItem(item = item, viewModel = viewModel)
+                    }
+                }
+            }
+        }
+    }
+}

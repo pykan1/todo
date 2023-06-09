@@ -11,6 +11,7 @@ data class Day(
     @PrimaryKey(autoGenerate = false)
     val date: String = "",
     var motivation: String = "",
+    var emotion: String = "",
     val priorityToDos: List<ToDo> = emptyList(),
     var toDos: List<ToDo> = emptyList()
 

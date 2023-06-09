@@ -24,17 +24,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todo.R
+import com.example.todo.presentation.screens.Calendar.CalendarViewModel
 import com.example.todo.presentation.screens.Main.MainViewModel
 import com.example.todo.presentation.ui.theme.DarkPurple
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddItem(mainViewModel: MainViewModel) {
+fun AddItem(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null) {
     val viewModel = AddViewModel()
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp)
+            .padding(horizontal = 10.dp, vertical = 5.dp)
             .heightIn(50.dp)
             .background(DarkPurple),
         horizontalArrangement = Arrangement.spacedBy(5.dp)
@@ -64,8 +65,10 @@ fun AddItem(mainViewModel: MainViewModel) {
             contentDescription = "",
             modifier = Modifier
                 .clickable {
-                    mainViewModel.changeIsAdd()
-                    mainViewModel.addToDo(viewModel.title)
+                    mainViewModel?.changeIsAdd()
+                    mainViewModel?.addToDo(viewModel.title)
+                    calendarViewModel?.changeIsAdd()
+                    calendarViewModel?.addToDo(viewModel.title)
                 }
                 .padding(5.dp)
                 .size(65.dp)
