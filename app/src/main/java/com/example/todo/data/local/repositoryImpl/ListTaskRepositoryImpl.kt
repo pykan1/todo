@@ -10,7 +10,9 @@ class ListTaskRepositoryImpl @Inject constructor(
 ) {
     suspend fun insertListTask(listTask: ListTask) = listTaskRepository.insertListTask(listTask)
 
-    suspend fun getAllListTask() = listTaskRepository.getAllListTask()
+    suspend fun getAllListTask(): List<ListTask> = listTaskRepository.getAllListTask()
 
     suspend fun changeToDos(newToDos: List<ToDo>, id: Long) = listTaskRepository.changeToDos(newToDos, id)
+
+    suspend fun getListTaskById(id: Long): ListTask = listTaskRepository.getListTaskById(id)
 }

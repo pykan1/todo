@@ -1,6 +1,7 @@
 package com.example.todo.presentation.screens.Emotion
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -84,12 +85,12 @@ fun EmotionScreen(navController: NavController) {
                         .fillMaxWidth()
                         .padding(25.dp),
                     text = "Трэкер настроения",
-                    fontSize = 16.sp,
+                    fontSize = 21.sp,
                     textAlign = TextAlign.Center,
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
                 )
-                LazyColumn() {
+                LazyColumn(modifier = Modifier.border(width = 1.dp, color = Color.Black)) {
                     itemsIndexed(
                         if (
                         days.isNotEmpty() && days[0].emotion == ""

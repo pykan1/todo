@@ -14,6 +14,7 @@ import com.example.todo.R
 import com.example.todo.presentation.screens.Calendar.CalendarScreen
 import com.example.todo.presentation.screens.Emotion.EmotionScreen
 import com.example.todo.presentation.screens.Greeting.GreetingScreen
+import com.example.todo.presentation.screens.List.ListScreen
 import com.example.todo.presentation.screens.Main.MainScreen
 
 
@@ -46,7 +47,7 @@ fun SetupNavHost (navController: NavHostController, viewModel: NavigationViewMod
             EmotionScreen(navController = navController)
         }
         composable(route = Screens.Editor.rout) {
-
+            ListScreen(navController = navController)
         }
         composable(route = Screens.Settings.rout) {
 

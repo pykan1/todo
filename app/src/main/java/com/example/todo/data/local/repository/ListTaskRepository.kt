@@ -17,4 +17,7 @@ interface ListTaskRepository {
 
     @Query("UPDATE listtask SET toDos=:newToDos WHERE id=:id")
     suspend fun changeToDos(newToDos: List<ToDo>, id: Long)
+
+    @Query("select * from listtask WHERE id=:id")
+    suspend fun getListTaskById(id: Long): ListTask
 }

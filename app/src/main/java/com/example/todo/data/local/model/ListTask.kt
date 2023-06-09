@@ -9,7 +9,7 @@ import com.example.todo.domain.Converter.ListConverter
 @TypeConverters(ListConverter::class)
 class ListTask (
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    var id: Long = 0,
     var name: String,
     var toDos: List<ToDo> = emptyList()
 )
