@@ -53,7 +53,6 @@ class CalendarViewModel @Inject constructor(
         Log.d("11", date)
         viewModelScope.launch {
             var day = getDayByDateUseCase.invoke(date)
-            Log.d("11", day.toDos.toString())
             if (day == null) {
                 Log.d("11", "new day")
                 day = Day(
