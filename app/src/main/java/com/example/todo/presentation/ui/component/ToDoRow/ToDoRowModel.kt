@@ -8,10 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.todo.data.local.model.ToDo
 import com.example.todo.presentation.screens.Calendar.CalendarViewModel
 import com.example.todo.presentation.screens.Main.MainViewModel
+import com.example.todo.presentation.ui.component.ListItem.ListItemViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class ToDoRowModel: ViewModel() {
+class ToDoRowModel : ViewModel() {
     val stateToDo = MutableStateFlow(ToDo())
 
     var isDone by mutableStateOf(false)
@@ -24,8 +25,12 @@ class ToDoRowModel: ViewModel() {
         }
     }
 
-    fun changeIsDone(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null) {
-        viewModelScope.launch{
+    fun changeIsDone(
+        mainViewModel: MainViewModel? = null,
+        calendarViewModel: CalendarViewModel? = null,
+        listItemViewModel: ListItemViewModel? = null
+    ) {
+        viewModelScope.launch {
             stateToDo.emit(
                 ToDo(
                     title = stateToDo.value.title,
@@ -39,8 +44,12 @@ class ToDoRowModel: ViewModel() {
         }
     }
 
-    fun changeIsPriority(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null) {
-        viewModelScope.launch{
+    fun changeIsPriority(
+        mainViewModel: MainViewModel? = null,
+        calendarViewModel: CalendarViewModel? = null,
+        listItemViewModel: ListItemViewModel? = null
+    ) {
+        viewModelScope.launch {
             stateToDo.emit(
                 ToDo(
                     title = stateToDo.value.title,
@@ -51,6 +60,7 @@ class ToDoRowModel: ViewModel() {
             )
             mainViewModel?.updateToDo(stateToDo.value)
             calendarViewModel?.updateToDo(stateToDo.value)
+//            listItemViewModel
         }
     }
 }

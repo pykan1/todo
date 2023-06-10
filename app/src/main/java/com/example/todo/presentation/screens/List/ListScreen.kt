@@ -38,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.todo.R
 import com.example.todo.data.local.model.ListTask
+import com.example.todo.presentation.navigation.Screens
 import com.example.todo.presentation.ui.theme.Container
 import com.example.todo.presentation.ui.theme.DarkPurple
 
@@ -84,13 +85,13 @@ fun ListScreen(navController: NavController) {
             )
         }
         if (viewModel.isAdd) {
-            AddList(viewModel = viewModel)
+            AddList(viewModel = viewModel, navController)
         }
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             itemsIndexed(
                 tasks
             ) {_, item ->
-                ListItem(item = item, viewModel = viewModel)
+                ListItem(item = item, viewModel = viewModel, navController)
             }
         }
     }
@@ -98,7 +99,7 @@ fun ListScreen(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddList(viewModel: ListViewModel) {
+fun AddList(viewModel: ListViewModel, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -142,11 +143,14 @@ fun AddList(viewModel: ListViewModel) {
 }
 
 @Composable
-fun ListItem(item: ListTask, viewModel: ListViewModel) {
+fun ListItem(item: ListTask, viewModel: ListViewModel, navController: NavController) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 15.dp),
+                .padding(horizontal = 10.dp, vertical = 15.dp)
+                .clickable {
+                    viewModel.postItem(item, navController)
+                },
             horizontalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             Image(
@@ -154,7 +158,6 @@ fun ListItem(item: ListTask, viewModel: ListViewModel) {
                 painter = painterResource(id = R.drawable.plan),
                 contentDescription = ""
             )
-
             Text(modifier = Modifier
                 .padding(5.dp)
                 .fillMaxWidth(),

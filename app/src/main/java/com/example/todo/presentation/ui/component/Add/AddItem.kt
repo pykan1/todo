@@ -26,11 +26,12 @@ import androidx.compose.ui.unit.sp
 import com.example.todo.R
 import com.example.todo.presentation.screens.Calendar.CalendarViewModel
 import com.example.todo.presentation.screens.Main.MainViewModel
+import com.example.todo.presentation.ui.component.ListItem.ListItemViewModel
 import com.example.todo.presentation.ui.theme.DarkPurple
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddItem(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null) {
+fun AddItem(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null, listItemViewModel: ListItemViewModel? = null) {
     val viewModel = AddViewModel()
     Row(
         modifier = Modifier
@@ -69,6 +70,8 @@ fun AddItem(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarVie
                     mainViewModel?.addToDo(viewModel.title)
                     calendarViewModel?.changeIsAdd()
                     calendarViewModel?.addToDo(viewModel.title)
+                    listItemViewModel?.changeIsAdd()
+                    listItemViewModel?.addToDo(viewModel.title)
                 }
                 .padding(5.dp)
                 .size(65.dp)

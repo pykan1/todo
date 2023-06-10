@@ -24,9 +24,10 @@ import com.example.todo.R
 import com.example.todo.data.local.model.ToDo
 import com.example.todo.presentation.screens.Calendar.CalendarViewModel
 import com.example.todo.presentation.screens.Main.MainViewModel
+import com.example.todo.presentation.ui.component.ListItem.ListItemViewModel
 
 @Composable
-fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null) {
+fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null, listItemViewModel: ListItemViewModel? = null) {
     val viewModel = ToDoRowModel()
     viewModel.initToDo(toDo)
     val toDoState by viewModel.stateToDo.collectAsState()
@@ -42,6 +43,7 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel:
                 .clickable {
                     mainViewModel?.let { viewModel.changeIsDone(mainViewModel = it) }
                     calendarViewModel?.let {viewModel.changeIsDone(calendarViewModel = it) }
+                    listItemViewModel?.let { viewModel.changeIsDone(listItemViewModel = listItemViewModel) }
             },
             painter = painterResource(id = if (toDoState.done) R.drawable.done else R.drawable.notdone),
             contentDescription = "isDone"
@@ -50,7 +52,7 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel:
             modifier = Modifier
                 .width(170.dp)
                 .clickable {
-                    viewModel.changeIsPriority(mainViewModel, calendarViewModel)
+                    viewModel.changeIsPriority(mainViewModel, calendarViewModel, listItemViewModel)
                 },
             text = toDoState.title,
             fontSize = 16.sp,
@@ -66,7 +68,7 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel:
                     .padding(start = 30.dp)
                     .size(25.dp)
                     .clickable {
-                        viewModel.changeIsPriority(mainViewModel , calendarViewModel)
+                        viewModel.changeIsPriority(mainViewModel , calendarViewModel, listItemViewModel)
                     }
             )
         }

@@ -36,22 +36,8 @@ class EmotionViewModel @Inject constructor(
             .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
             .toFormatter()
 
-        val date3 = date1.split("-").toMutableList()
-        val date4 = date2.split("-").toMutableList()
-        if (date3[0].length == 1 ) {
-            date3[0] = "0${date3[0]}"
-        }
-        if (date3[1].length == 1 ) {
-            date3[1] = "0${date3[1]}"
-        }
-        if (date4[0].length == 1 ) {
-            date4[0] = "0${date4[0]}"
-        }
-        if (date4[1].length == 1 ) {
-            date4[1] = "0${date4[1]}"
-        }
-        val localDate1 = LocalDate.parse("${date3[0]}-${date3[1]}-${date3[2]}", formatter)
-        val localDate2 = LocalDate.parse("${date4[0]}-${date4[1]}-${date4[2]}", formatter)
+        val localDate1 = LocalDate.parse(date1, formatter)
+        val localDate2 = LocalDate.parse(date2, formatter)
 
         return localDate1.compareTo(localDate2)
     }

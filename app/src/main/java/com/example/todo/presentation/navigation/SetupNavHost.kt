@@ -1,5 +1,6 @@
 package com.example.todo.presentation.navigation
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Domain
 import androidx.compose.material.icons.filled.Edit
@@ -7,15 +8,21 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Start
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.todo.R
+import com.example.todo.data.local.model.ListTask
 import com.example.todo.presentation.screens.Calendar.CalendarScreen
 import com.example.todo.presentation.screens.Emotion.EmotionScreen
 import com.example.todo.presentation.screens.Greeting.GreetingScreen
+import com.example.todo.presentation.screens.List.ListItem
 import com.example.todo.presentation.screens.List.ListScreen
+import com.example.todo.presentation.screens.List.ListViewModel
 import com.example.todo.presentation.screens.Main.MainScreen
+import com.example.todo.presentation.ui.component.ListItem.ListItemToDo
 
 
 sealed class Screens(val rout: String, val icon: Int) {
@@ -26,6 +33,7 @@ sealed class Screens(val rout: String, val icon: Int) {
     object Emotion : Screens(rout = "emotion_screen", R.drawable.emotion)
     object Editor : Screens(rout = "editor_screen", R.drawable.editor)
     object Settings : Screens(rout = "settings_screen", R.drawable.settings)
+    object ListItem: Screens(rout = "listItem_screen", R.drawable.phone)
 }
 
 @Composable
@@ -49,8 +57,13 @@ fun SetupNavHost (navController: NavHostController, viewModel: NavigationViewMod
         composable(route = Screens.Editor.rout) {
             ListScreen(navController = navController)
         }
+        composable(route = Screens.ListItem.rout) {
+            ListItemToDo(navController = navController)
+        }
+
         composable(route = Screens.Settings.rout) {
 
         }
+
     }
 }

@@ -38,6 +38,8 @@ import com.example.todo.domain.usecase.GetCurrentDateUseCase
 import com.example.todo.presentation.ui.component.EmotionItem.AddItem
 import com.example.todo.presentation.ui.component.EmotionItem.EmotionItem
 import com.example.todo.presentation.ui.theme.BasicBox
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,13 +93,14 @@ fun EmotionScreen(navController: NavController) {
                     fontWeight = FontWeight.Bold,
                 )
                 LazyColumn(modifier = Modifier.border(width = 1.dp, color = Color.Black)) {
+                    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
                     itemsIndexed(
                         if (
                         days.isNotEmpty() && days[0].emotion == ""
                         )
-                        days.drop(1).filter { viewModel.compareDates(it.date, currentDate) <= 0 }
+                        days.drop(1).filter { viewModel.compareDates(it.date, currentDate) <= 0 }.sortedBy { LocalDate.parse(it.date, formatter) }
                     else
-                        days.filter { viewModel.compareDates(it.date, currentDate) <= 0 }
+                        days.filter { viewModel.compareDates(it.date, currentDate) <= 0 }.sortedBy { LocalDate.parse(it.date, formatter) }
                     )
                     { _, item ->
                         EmotionItem(item = item, viewModel = viewModel)

@@ -10,6 +10,6 @@ import com.example.todo.domain.Converter.ListConverter
 class ListTask (
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0,
-    var name: String,
+    var name: String = "",
     var toDos: List<ToDo> = emptyList()
 )
