@@ -1,6 +1,5 @@
 package com.example.todo.presentation.screens.Calendar
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,7 +28,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -42,19 +40,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.todo.presentation.screens.Main.MainViewModel
+import com.example.todo.presentation.Settings.SettingsViewModel
 import com.example.todo.presentation.ui.component.Add.AddItem
 import com.example.todo.presentation.ui.component.ToDoRow.ToDoRow
 import com.example.todo.presentation.ui.theme.BasicBox
 import com.example.todo.presentation.ui.theme.BorderColor
-import java.lang.Math.ceil
 import java.util.Calendar
 import java.util.Locale
 import kotlin.math.ceil
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CalendarScreen(navController: NavController) {
+fun CalendarScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
     val calendar = Calendar.getInstance()
     val currentYear = calendar.get(Calendar.YEAR)
     val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)

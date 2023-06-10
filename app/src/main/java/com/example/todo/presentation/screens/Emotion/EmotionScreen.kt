@@ -2,15 +2,12 @@ package com.example.todo.presentation.screens.Emotion
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -35,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.todo.domain.usecase.GetCurrentDateUseCase
+import com.example.todo.presentation.Settings.SettingsViewModel
 import com.example.todo.presentation.ui.component.EmotionItem.AddItem
 import com.example.todo.presentation.ui.component.EmotionItem.EmotionItem
 import com.example.todo.presentation.ui.theme.BasicBox
@@ -44,7 +42,7 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmotionScreen(navController: NavController) {
+fun EmotionScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
     val viewModel = hiltViewModel<EmotionViewModel>()
     val currentDate = GetCurrentDateUseCase().invoke()
     val days = viewModel.days.observeAsState(listOf()).value

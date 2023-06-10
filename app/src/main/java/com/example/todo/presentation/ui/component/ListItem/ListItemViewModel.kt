@@ -1,5 +1,6 @@
 package com.example.todo.presentation.ui.component.ListItem
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,12 +25,14 @@ class ListItemViewModel @Inject constructor(
     val toDos = MutableLiveData<List<ToDo>>()
     var isAdd by mutableStateOf(false)
     var id: Long by mutableStateOf(-1)
+    var name by mutableStateOf("")
 
-    fun invoke(idTask: Long) {
-        id = idTask
+    fun invoke(idTask: Long?) {
+        id = idTask!!
         viewModelScope.launch {
             getListTaskByIdUseCase.invoke(idTask).let {
                 toDos.postValue(it.toDos)
+                name = it.name
             }
         }
     }
@@ -44,6 +47,21 @@ class ListItemViewModel @Inject constructor(
                 val newToDOs = it.toDos + ToDo(title = title)
                 changeToDosListTaskUseCase.invoke(newToDOs, id)
                 toDos.postValue(newToDOs)
+            }
+        }
+    }
+
+    fun updateToDo(toDo: ToDo) {
+        viewModelScope.launch {
+            val newToDos = toDos.value!!.map {
+                if (it.title == toDo.title) {
+                    toDo
+                } else {
+                    it
+                }
+            }
+            changeToDosListTaskUseCase.invoke(newToDos, id). let {
+                toDos.postValue(newToDos)
             }
         }
     }

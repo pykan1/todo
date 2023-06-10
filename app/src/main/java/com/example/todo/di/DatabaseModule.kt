@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import com.example.todo.data.local.AppDatabase
 import com.example.todo.data.local.AppDatabase2
+import com.example.todo.data.local.AppDatabase3
 import com.example.todo.data.local.repository.DayRepository
 import com.example.todo.data.local.repository.ListTaskRepository
+import com.example.todo.data.local.repository.SettingsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,6 +45,20 @@ object ToDoDatabaseModule {
     @Provides
     fun provideListTaskDao(appDatabase2: AppDatabase2): ListTaskRepository {
         return appDatabase2.listTaskDao()
+    }
+
+    @Provides
+    fun provideSettings(@ApplicationContext appContext: Context): AppDatabase3 {
+        return Room.databaseBuilder(
+            appContext,
+            AppDatabase3::class.java,
+            "settings"
+        ).build()
+    }
+
+    @Provides
+    fun provideSettingsDao(appDatabase3: AppDatabase3): SettingsRepository {
+        return appDatabase3.settingsDao()
     }
 
 

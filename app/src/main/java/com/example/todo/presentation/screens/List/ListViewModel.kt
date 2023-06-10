@@ -2,6 +2,7 @@ package com.example.todo.presentation.screens.List
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.os.bundleOf
@@ -37,7 +38,6 @@ class ListViewModel @Inject constructor(
         viewModelScope.launch {
             getAllListTaskUseCase.invoke().let {
                 listTask.postValue(it)
-                Log.d("11", it.toString())
             }
         }
     }
@@ -46,7 +46,7 @@ class ListViewModel @Inject constructor(
         viewModelScope.launch {
             itemList.emit(item).let {
                 navController.navigate(
-                    route = Screens.ListItem.rout
+                    route = "listItem_screen/${item.id.toString()}"
                 )
             }
         }
@@ -64,27 +64,13 @@ class ListViewModel @Inject constructor(
 
     fun createList() {
         viewModelScope.launch {
-            val ls = ListTask(name = title)
+            val ls = ListTask(name = title, id = "${listTask.value!!.size+1}".toLong())
             val newListTask = listTask.value?.plus(ls)
-            insertListTaskUseCase.invoke(ls)
-            listTask.postValue(newListTask)
-            title = ""
-        }
-    }
-
-    fun addToDo(title: String, id: Long) {
-        viewModelScope.launch {
-            getListTaskByIdUseCase.invoke(id).let {
-                val newToDos = it.toDos + ToDo(title = title)
-                changeToDosListTaskUseCase.invoke(newToDos, id = id)
-                listTask.postValue(listTask.value?.map { it ->
-                    if (it.id == id) {
-                        ListTask(id = it.id, name = it.name, toDos = newToDos)
-                    } else {
-                        it
-                    }
-                })
+            insertListTaskUseCase.invoke(ls).let {
+                listTask.postValue(newListTask)
             }
+            Log.d("11", "${newListTask!![newListTask.size-1].name.toString()} ${newListTask[newListTask.size-1].id}")
+            title = ""
         }
     }
 }

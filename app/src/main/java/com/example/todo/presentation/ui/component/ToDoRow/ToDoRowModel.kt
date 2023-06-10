@@ -41,6 +41,7 @@ class ToDoRowModel : ViewModel() {
             )
             mainViewModel?.updateToDo(stateToDo.value)
             calendarViewModel?.updateToDo(stateToDo.value)
+            listItemViewModel?.updateToDo(stateToDo.value)
         }
     }
 
@@ -60,7 +61,7 @@ class ToDoRowModel : ViewModel() {
             )
             mainViewModel?.updateToDo(stateToDo.value)
             calendarViewModel?.updateToDo(stateToDo.value)
-//            listItemViewModel
+            listItemViewModel?.updateToDo(stateToDo.value)
         }
     }
 }

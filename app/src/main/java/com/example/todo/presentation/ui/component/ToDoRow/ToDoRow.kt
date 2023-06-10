@@ -43,7 +43,7 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel:
                 .clickable {
                     mainViewModel?.let { viewModel.changeIsDone(mainViewModel = it) }
                     calendarViewModel?.let {viewModel.changeIsDone(calendarViewModel = it) }
-                    listItemViewModel?.let { viewModel.changeIsDone(listItemViewModel = listItemViewModel) }
+                    listItemViewModel?.let { viewModel.changeIsDone(listItemViewModel = it) }
             },
             painter = painterResource(id = if (toDoState.done) R.drawable.done else R.drawable.notdone),
             contentDescription = "isDone"
@@ -52,7 +52,7 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel:
             modifier = Modifier
                 .width(170.dp)
                 .clickable {
-                    viewModel.changeIsPriority(mainViewModel, calendarViewModel, listItemViewModel)
+                    viewModel.changeIsPriority(mainViewModel = mainViewModel , calendarViewModel = calendarViewModel, listItemViewModel = listItemViewModel)
                 },
             text = toDoState.title,
             fontSize = 16.sp,
@@ -68,7 +68,7 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel:
                     .padding(start = 30.dp)
                     .size(25.dp)
                     .clickable {
-                        viewModel.changeIsPriority(mainViewModel , calendarViewModel, listItemViewModel)
+                        viewModel.changeIsPriority(mainViewModel = mainViewModel , calendarViewModel = calendarViewModel, listItemViewModel = listItemViewModel)
                     }
             )
         }

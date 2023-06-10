@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,12 +37,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.todo.R
 import com.example.todo.data.local.model.ListTask
-import com.example.todo.presentation.navigation.Screens
+import com.example.todo.presentation.Settings.SettingsViewModel
 import com.example.todo.presentation.ui.theme.Container
 import com.example.todo.presentation.ui.theme.DarkPurple
 
 @Composable
-fun ListScreen(navController: NavController) {
+fun ListScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
     val viewModel = hiltViewModel<ListViewModel>()
     val tasks = viewModel.listTask.observeAsState(listOf()).value
     Column(

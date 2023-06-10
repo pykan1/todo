@@ -39,7 +39,6 @@ class MainViewModel @Inject constructor(
 
     fun initDay() {
         viewModelScope.launch {
-            Log.d("11", getAllDayUseCase.invoke().toString())
             var day = getDayByDateUseCase.invoke(date = currentDate)
             if (day == null) {
                 day = Day(
