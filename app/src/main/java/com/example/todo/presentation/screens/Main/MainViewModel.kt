@@ -39,17 +39,27 @@ class MainViewModel @Inject constructor(
 
     fun initDay() {
         viewModelScope.launch {
-            var day = getDayByDateUseCase.invoke(date = currentDate)
-            if (day == null) {
-                day = Day(
-                    date = currentDate
-                )
-                dayState.emit(day)
-                insertDayUseCase.invoke(day)
-                _toDos.postValue(day.toDos)
-                dayState.emit(day)
-            } else {
-                _toDos.postValue(day.toDos)
+            getDayByDateUseCase.invoke(date = currentDate). let {
+                try {
+                    if (it == null) {
+                        val day = Day(
+//                        motivation = Day().motivationList[(Day().motivationList.indices).random()].toString(),
+                            date = currentDate
+                        )
+                        dayState.emit(day)
+                        Log.d("11", "new day ннн")
+                        insertDayUseCase.invoke(day).let {
+                            _toDos.postValue(day.toDos)
+                            dayState.emit(day)
+                        }
+                    } else {
+                        dayState.emit(it)
+                        _toDos.postValue(it.toDos)
+                    }
+                } catch (e: Exception) {
+                    Log.d("11", e.message.toString())
+                }
+
             }
         }
     }

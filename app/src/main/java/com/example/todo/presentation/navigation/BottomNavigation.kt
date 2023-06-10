@@ -10,6 +10,7 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,10 +20,11 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.todo.presentation.ui.theme.NavigationBar
+import com.example.todo.presentation.Settings.SettingsViewModel
+import com.example.todo.presentation.ui.theme.ColorTheme
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(navController: NavHostController, settingsViewModel: SettingsViewModel) {
     val screens = listOf(
         Screens.Calendar,
         Screens.Emotion,
@@ -39,6 +41,7 @@ fun BottomBar(navController: NavHostController) {
                 screen = screen,
                 currentDestination = currentDestination,
                 navController = navController,
+                settingsViewModel = settingsViewModel
             )
         }
     }
@@ -49,10 +52,13 @@ fun RowScope.AddItem(
     screen: Screens,
     currentDestination: NavDestination?,
     navController: NavHostController,
+    settingsViewModel: SettingsViewModel
 ) {
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
     BottomNavigationItem(
         modifier = Modifier
-            .background(color = NavigationBar)
+            .background(color = colorTheme.NavigationBar)
             .wrapContentSize(),
         icon = {
             Image(

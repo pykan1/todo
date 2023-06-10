@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,11 +35,13 @@ import androidx.navigation.NavController
 import com.example.todo.presentation.Settings.SettingsViewModel
 import com.example.todo.presentation.ui.component.Add.AddItem
 import com.example.todo.presentation.ui.component.ToDoRow.ToDoRow
-import com.example.todo.presentation.ui.theme.BasicBox
+import com.example.todo.presentation.ui.theme.ColorTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListItemToDo(navController: NavController, id: Long? = 0, settingsViewModel: SettingsViewModel) {
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
     val listItemViewModel = hiltViewModel<ListItemViewModel>()
     listItemViewModel.invoke(id)
     val toDos = listItemViewModel.toDos.observeAsState(listOf()).value
@@ -54,7 +57,7 @@ fun ListItemToDo(navController: NavController, id: Long? = 0, settingsViewModel:
             FloatingActionButton(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(BasicBox),
+                    .background(colorTheme.BasicBox),
                 onClick = { listItemViewModel.changeIsAdd() }
             ) {
                 Icon(
@@ -68,19 +71,21 @@ fun ListItemToDo(navController: NavController, id: Long? = 0, settingsViewModel:
         Column(
             modifier = Modifier
                 .padding(it)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .background(colorTheme.Background),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Text(
                 modifier = Modifier
                     .fillMaxWidth(),
                 text = "Список\n${listItemViewModel.name}",
+                color = colorTheme.TextColorWhite,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 21.sp,
             )
             if (listItemViewModel.isAdd) {
-                AddItem(listItemViewModel = listItemViewModel)
+                AddItem(listItemViewModel = listItemViewModel, settingsViewModel = settingsViewModel)
             }
             LazyColumn(
                 modifier = Modifier

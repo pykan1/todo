@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,8 +44,7 @@ import androidx.navigation.NavController
 import com.example.todo.presentation.Settings.SettingsViewModel
 import com.example.todo.presentation.ui.component.Add.AddItem
 import com.example.todo.presentation.ui.component.ToDoRow.ToDoRow
-import com.example.todo.presentation.ui.theme.BasicBox
-import com.example.todo.presentation.ui.theme.BorderColor
+import com.example.todo.presentation.ui.theme.ColorTheme
 import java.util.Calendar
 import java.util.Locale
 import kotlin.math.ceil
@@ -52,6 +52,8 @@ import kotlin.math.ceil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
     val calendar = Calendar.getInstance()
     val currentYear = calendar.get(Calendar.YEAR)
     val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -73,7 +75,7 @@ fun CalendarScreen(navController: NavController, settingsViewModel: SettingsView
             FloatingActionButton(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(BasicBox),
+                    .background(colorTheme.BasicBox),
                 onClick = { viewModel.changeIsAdd() }
             ) {
                 Icon(
@@ -84,7 +86,12 @@ fun CalendarScreen(navController: NavController, settingsViewModel: SettingsView
             }
         }
     ) {
-        Column(modifier = Modifier.padding(it)) {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+                .background(colorTheme.Background)
+        ) {
             Text(
                 text = "${
                     calendar.getDisplayName(
@@ -93,6 +100,7 @@ fun CalendarScreen(navController: NavController, settingsViewModel: SettingsView
                         Locale.getDefault()
                     )
                 } $currentYear",
+                color = colorTheme.TextColorWhite,
                 modifier = Modifier.padding(16.dp),
                 style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.Bold)
             )
@@ -104,10 +112,11 @@ fun CalendarScreen(navController: NavController, settingsViewModel: SettingsView
                         modifier = Modifier
                             .weight(1f)
                             .height(50.dp)
-                            .border(width = 1.dp, color = BorderColor)
+                            .border(width = 1.dp, color = colorTheme.BorderColor)
                     ) {
                         Text(
                             text = label,
+                            color = colorTheme.TextColorWhite,
                             modifier = Modifier.padding(5.dp),
                             textAlign = TextAlign.Center,
                             style = TextStyle(fontWeight = FontWeight.Bold)
@@ -140,7 +149,7 @@ fun CalendarScreen(navController: NavController, settingsViewModel: SettingsView
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(50.dp)
-                                    .border(width = 1.dp, color = BorderColor)
+                                    .border(width = 1.dp, color = colorTheme.BorderColor)
                             )
                         } else {
                             // Day cell
@@ -149,13 +158,14 @@ fun CalendarScreen(navController: NavController, settingsViewModel: SettingsView
                                 modifier = Modifier
                                     .weight(1f)
                                     .height(50.dp)
-                                    .border(width = 1.dp, color = BorderColor)
+                                    .border(width = 1.dp, color = colorTheme.BorderColor)
                                     .clickable {
                                         viewModel.currentDay(dayOfMonth = day)
                                     }
                             ) {
                                 Text(
                                     text = day.toString(),
+                                    color = colorTheme.TextColorWhite,
                                     modifier = Modifier.padding(5.dp),
                                     textAlign = TextAlign.Start,
                                     style = TextStyle(fontWeight = FontWeight.Bold)
@@ -166,7 +176,7 @@ fun CalendarScreen(navController: NavController, settingsViewModel: SettingsView
                 }
             }
             if (viewModel.isAdd) {
-                AddItem(calendarViewModel = viewModel)
+                AddItem(calendarViewModel = viewModel, settingsViewModel = settingsViewModel)
             } else {
                 Spacer(modifier = Modifier.size(40.dp))
             }
@@ -187,7 +197,7 @@ fun CalendarScreen(navController: NavController, settingsViewModel: SettingsView
                         .fillMaxWidth()
                         .heightIn(min = 220.dp)
                         .clip(RoundedCornerShape(10.dp))
-                        .background(BasicBox),
+                        .background(colorTheme.BasicBox),
 //                contentAlignment = Alignment.TopStart
                 ) {
                     Text(

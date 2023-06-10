@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -38,12 +39,14 @@ import androidx.navigation.NavController
 import com.example.todo.presentation.Settings.SettingsViewModel
 import com.example.todo.presentation.ui.component.Add.AddItem
 import com.example.todo.presentation.ui.component.ToDoRow.ToDoRow
-import com.example.todo.presentation.ui.theme.BasicBox
+import com.example.todo.presentation.ui.theme.ColorTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
     val viewModel = hiltViewModel<MainViewModel>()
     viewModel.initDay()
     val dayState by viewModel.dayState.collectAsState()
@@ -60,7 +63,7 @@ fun MainScreen(navController: NavController, settingsViewModel: SettingsViewMode
             FloatingActionButton(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(BasicBox),
+                    .background(colorTheme.BasicBox),
                 onClick = { viewModel.changeIsAdd() }
             ) {
                 Icon(
@@ -73,7 +76,7 @@ fun MainScreen(navController: NavController, settingsViewModel: SettingsViewMode
     ) {
         Column(
             modifier = Modifier
-                .background(Color.White)
+                .background(colorTheme.Background)
                 .fillMaxSize()
                 .padding(it),
             verticalArrangement = Arrangement.spacedBy(7.dp)
@@ -84,20 +87,22 @@ fun MainScreen(navController: NavController, settingsViewModel: SettingsViewMode
                     .padding(top = 25.dp, start = 60.dp, end = 60.dp),
                 text = "Мотивация на этот день:",
                 textAlign = TextAlign.Center,
+                color = colorTheme.TextColorWhite,
                 fontWeight = FontWeight.Bold,
                 fontSize = 21.sp,
             )
 
             Text(
                 modifier = Modifier
-                    .padding(start = 25.dp, end = 25.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(horizontal = 30.dp),
                 text = dayState.motivation,
+                color = colorTheme.TextColorWhite,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
             )
             if (viewModel.isAdd) {
-                AddItem(mainViewModel = viewModel)
+                AddItem(mainViewModel = viewModel, settingsViewModel = settingsViewModel)
             }
             Column(
                 modifier = Modifier
@@ -105,7 +110,7 @@ fun MainScreen(navController: NavController, settingsViewModel: SettingsViewMode
                     .fillMaxWidth()
                     .heightIn(min = 220.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(BasicBox),
+                    .background(colorTheme.BasicBox),
 //                contentAlignment = Alignment.TopStart
             ) {
                 Text(

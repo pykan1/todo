@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,15 +39,18 @@ import androidx.navigation.NavController
 import com.example.todo.R
 import com.example.todo.data.local.model.ListTask
 import com.example.todo.presentation.Settings.SettingsViewModel
-import com.example.todo.presentation.ui.theme.Container
-import com.example.todo.presentation.ui.theme.DarkPurple
+import com.example.todo.presentation.ui.theme.ColorTheme
 
 @Composable
 fun ListScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
     val viewModel = hiltViewModel<ListViewModel>()
     val tasks = viewModel.listTask.observeAsState(listOf()).value
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorTheme.Background),
         verticalArrangement = Arrangement.spacedBy(30.dp)
     ) {
         Text(
@@ -54,7 +58,7 @@ fun ListScreen(navController: NavController, settingsViewModel: SettingsViewMode
                 .padding(top = 15.dp)
                 .fillMaxWidth(),
             text = "Списки",
-            color = Color.Black,
+            color = colorTheme.TextColorWhite,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             fontSize = 21.sp,
@@ -64,7 +68,7 @@ fun ListScreen(navController: NavController, settingsViewModel: SettingsViewMode
                 viewModel.changeIsAdd()
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Container,
+                containerColor = colorTheme.Container,
                 contentColor = Color.White
             ),
             modifier = Modifier
@@ -77,20 +81,20 @@ fun ListScreen(navController: NavController, settingsViewModel: SettingsViewMode
                     .padding(5.dp)
                     .fillMaxWidth(),
                 text = "Создать список",
-                color = Color.White,
+                color = colorTheme.TextColorWhite,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
             )
         }
         if (viewModel.isAdd) {
-            AddList(viewModel = viewModel, navController)
+            AddList(viewModel = viewModel, navController, settingsViewModel)
         }
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             itemsIndexed(
                 tasks
             ) {_, item ->
-                ListItem(item = item, viewModel = viewModel, navController)
+                ListItem(item = item, viewModel = viewModel, navController, settingsViewModel)
             }
         }
     }
@@ -98,13 +102,15 @@ fun ListScreen(navController: NavController, settingsViewModel: SettingsViewMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddList(viewModel: ListViewModel, navController: NavController) {
+fun AddList(viewModel: ListViewModel, navController: NavController, settingsViewModel: SettingsViewModel) {
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .heightIn(50.dp)
-            .background(DarkPurple),
+            .background(colorTheme.Add),
         horizontalArrangement = Arrangement.spacedBy(5.dp)
 
     ) {
@@ -142,7 +148,9 @@ fun AddList(viewModel: ListViewModel, navController: NavController) {
 }
 
 @Composable
-fun ListItem(item: ListTask, viewModel: ListViewModel, navController: NavController) {
+fun ListItem(item: ListTask, viewModel: ListViewModel, navController: NavController, settingsViewModel: SettingsViewModel) {
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -161,7 +169,7 @@ fun ListItem(item: ListTask, viewModel: ListViewModel, navController: NavControl
                 .padding(5.dp)
                 .fillMaxWidth(),
                 text = item.name,
-                color = Color.Black,
+                color = colorTheme.TextColorWhite,
                 textAlign = TextAlign.Start,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,)

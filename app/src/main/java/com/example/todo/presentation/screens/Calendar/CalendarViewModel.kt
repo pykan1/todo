@@ -57,12 +57,16 @@ class CalendarViewModel @Inject constructor(
 
     fun currentDay(dayOfMonth: Int) {
         day = dayOfMonth
+        if (calendar.get(Calendar.DAY_OF_MONTH) == dayOfMonth) {
+
+        }
         val date = getDate(dayOfMonth)
         Log.d("11", date)
         viewModelScope.launch {
             var day = getDayByDateUseCase.invoke(date)
             if (day == null) {
-                Log.d("11", "new day")
+
+                Log.d("11", "опачки")
                 day = Day(
                     date = date
                 )

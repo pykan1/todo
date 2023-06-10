@@ -17,34 +17,43 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.todo.R
+import com.example.todo.presentation.Settings.SettingsViewModel
 import com.example.todo.presentation.screens.Calendar.CalendarViewModel
 import com.example.todo.presentation.screens.Main.MainViewModel
 import com.example.todo.presentation.ui.component.ListItem.ListItemViewModel
-import com.example.todo.presentation.ui.theme.DarkPurple
+import com.example.todo.presentation.ui.theme.ColorTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddItem(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarViewModel? = null, listItemViewModel: ListItemViewModel? = null) {
+fun AddItem(
+    mainViewModel: MainViewModel? = null,
+    calendarViewModel: CalendarViewModel? = null,
+    listItemViewModel: ListItemViewModel? = null,
+    settingsViewModel: SettingsViewModel
+) {
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
     val viewModel = AddViewModel()
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
-            .heightIn(50.dp)
-            .background(DarkPurple),
+            .background(colorTheme.Background),
         horizontalArrangement = Arrangement.spacedBy(5.dp)
 
     ) {
         Card(
             modifier = Modifier
-                .padding(start = 5.dp, end = 40.dp, bottom = 5.dp, top = 5.dp),
+                .padding(start = 5.dp, end = 20.dp, bottom = 5.dp, top = 5.dp),
             shape = RoundedCornerShape(30.dp)
         ) {
             TextField(
@@ -57,13 +66,21 @@ fun AddItem(mainViewModel: MainViewModel? = null, calendarViewModel: CalendarVie
                 ),
                 textStyle = TextStyle(fontSize = 18.sp),
                 singleLine = true,
-                modifier = Modifier.width(280.dp)
+                modifier = Modifier
+                    .width(280.dp)
+                    .heightIn(50.dp)
             )
         }
 
         Image(
             painter = painterResource(id = R.drawable.done),
             contentDescription = "",
+            colorFilter = if (state.value.theme in listOf(
+                    0,
+                    1,
+                    3
+                )
+            ) ColorFilter.tint(Color.Black) else ColorFilter.tint(Color.White),
             modifier = Modifier
                 .clickable {
                     mainViewModel?.changeIsAdd()

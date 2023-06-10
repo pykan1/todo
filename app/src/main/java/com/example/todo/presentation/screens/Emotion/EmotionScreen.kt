@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +36,7 @@ import com.example.todo.domain.usecase.GetCurrentDateUseCase
 import com.example.todo.presentation.Settings.SettingsViewModel
 import com.example.todo.presentation.ui.component.EmotionItem.AddItem
 import com.example.todo.presentation.ui.component.EmotionItem.EmotionItem
-import com.example.todo.presentation.ui.theme.BasicBox
+import com.example.todo.presentation.ui.theme.ColorTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -43,6 +44,8 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmotionScreen(navController: NavController, settingsViewModel: SettingsViewModel) {
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
     val viewModel = hiltViewModel<EmotionViewModel>()
     val currentDate = GetCurrentDateUseCase().invoke()
     val days = viewModel.days.observeAsState(listOf()).value
@@ -50,7 +53,7 @@ fun EmotionScreen(navController: NavController, settingsViewModel: SettingsViewM
     val localFocusManager = LocalFocusManager.current
     val day = calendar.get(Calendar.DAY_OF_MONTH)
     if (viewModel.isAdd) {
-        AddItem(viewModel = viewModel)
+        AddItem(viewModel = viewModel, settingsViewModel)
     } else {
         Scaffold(
             modifier = Modifier.pointerInput(Unit) {
@@ -63,7 +66,7 @@ fun EmotionScreen(navController: NavController, settingsViewModel: SettingsViewM
                 FloatingActionButton(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(BasicBox),
+                        .background(colorTheme.BasicBox),
                     onClick = { viewModel.changeIsAdd() }
                 ) {
                     Icon(
@@ -77,7 +80,8 @@ fun EmotionScreen(navController: NavController, settingsViewModel: SettingsViewM
             Column(
                 modifier = Modifier
                     .padding(it)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .background(colorTheme.Background),
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
@@ -87,7 +91,7 @@ fun EmotionScreen(navController: NavController, settingsViewModel: SettingsViewM
                     text = "Трэкер настроения",
                     fontSize = 21.sp,
                     textAlign = TextAlign.Center,
-                    color = Color.Black,
+                    color = colorTheme.TextColorWhite,
                     fontWeight = FontWeight.Bold,
                 )
                 LazyColumn(modifier = Modifier.border(width = 1.dp, color = Color.Black)) {
@@ -101,7 +105,7 @@ fun EmotionScreen(navController: NavController, settingsViewModel: SettingsViewM
                         days.filter { viewModel.compareDates(it.date, currentDate) <= 0 }.sortedBy { LocalDate.parse(it.date, formatter) }
                     )
                     { _, item ->
-                        EmotionItem(item = item, viewModel = viewModel)
+                        EmotionItem(item = item, viewModel = viewModel, settingsViewModel)
                     }
                 }
             }

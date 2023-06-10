@@ -46,7 +46,7 @@ import com.example.todo.R
 import com.example.todo.presentation.navigation.NavigationViewModel
 import com.example.todo.presentation.navigation.Screens
 import com.example.todo.presentation.ui.component.GreetingRow
-import com.example.todo.presentation.ui.theme.DarkPurple
+import com.example.todo.presentation.ui.theme.ColorTheme
 import java.nio.file.WatchEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,7 +95,7 @@ fun GreetingScreen(navController: NavController, viewModel: NavigationViewModel)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp)),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = DarkPurple
+                backgroundColor = ColorTheme(0).DarkPurple
             )
 
         ) {

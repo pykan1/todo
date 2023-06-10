@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,12 +30,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.todo.presentation.Settings.SettingsViewModel
+import com.example.todo.presentation.navigation.Screens
 import com.example.todo.presentation.screens.Emotion.EmotionViewModel
-import com.example.todo.presentation.ui.theme.BasicBox
+import com.example.todo.presentation.ui.theme.ColorTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddItem(viewModel: EmotionViewModel) {
+fun AddItem(viewModel: EmotionViewModel, settingsViewModel: SettingsViewModel) {
+    val state = settingsViewModel.stateSettings.collectAsState()
+    val colorTheme = ColorTheme(state.value.theme)
     val localFocusManager = LocalFocusManager.current
     Scaffold(
         modifier = Modifier.pointerInput(Unit) {
@@ -47,7 +52,7 @@ fun AddItem(viewModel: EmotionViewModel) {
             FloatingActionButton(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .background(BasicBox),
+                    .background(colorTheme.BasicBox),
                 onClick = { viewModel.changeIsAdd() }
             ) {
                 Icon(
@@ -76,7 +81,7 @@ fun AddItem(viewModel: EmotionViewModel) {
                 color = Color.Black,
                 fontSize = 16.sp,
             )
-            EmotionItem(item = viewModel.days.value!![0], viewModel = viewModel)
+            EmotionItem(item = viewModel.days.value!![0], viewModel = viewModel, settingsViewModel)
         }
     }
 

@@ -7,10 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.todo.presentation.Settings.SettingsViewModel
 
 @Composable
 fun SetupNavHostScreen(navController: NavHostController) {
     val viewModel = hiltViewModel<NavigationViewModel>()
+    val settingsViewModel = hiltViewModel<SettingsViewModel>()
     Scaffold(
 //        topBar = {
 //            TopAppBar(
@@ -30,7 +32,7 @@ fun SetupNavHostScreen(navController: NavHostController) {
 //            )
 //        },
         bottomBar = {
-            if (viewModel.days.isNotEmpty() || viewModel.isReady) {BottomBar(navController = navController)}
+            if (viewModel.days.isNotEmpty() || viewModel.isReady) {BottomBar(navController = navController, settingsViewModel = settingsViewModel)}
         },
         content = { padding ->
             Box(modifier = Modifier.padding(padding)) {
