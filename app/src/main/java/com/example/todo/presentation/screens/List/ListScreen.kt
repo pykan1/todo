@@ -28,6 +28,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -93,7 +94,7 @@ fun ListScreen(navController: NavController, settingsViewModel: SettingsViewMode
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             itemsIndexed(
                 tasks
-            ) {_, item ->
+            ) { _, item ->
                 ListItem(item = item, viewModel = viewModel, navController, settingsViewModel)
             }
         }
@@ -102,7 +103,11 @@ fun ListScreen(navController: NavController, settingsViewModel: SettingsViewMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddList(viewModel: ListViewModel, navController: NavController, settingsViewModel: SettingsViewModel) {
+fun AddList(
+    viewModel: ListViewModel,
+    navController: NavController,
+    settingsViewModel: SettingsViewModel
+) {
     val state = settingsViewModel.stateSettings.collectAsState()
     val colorTheme = ColorTheme(state.value.theme)
     Row(
@@ -110,13 +115,13 @@ fun AddList(viewModel: ListViewModel, navController: NavController, settingsView
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .heightIn(50.dp)
-            .background(colorTheme.Add),
+            .background(colorTheme.Background),
         horizontalArrangement = Arrangement.spacedBy(5.dp)
 
     ) {
         Card(
             modifier = Modifier
-                .padding(start = 5.dp, end = 40.dp, bottom = 5.dp, top = 5.dp),
+                .padding(start = 5.dp, end = 20.dp, bottom = 5.dp, top = 5.dp),
             shape = RoundedCornerShape(30.dp)
         ) {
             TextField(
@@ -136,6 +141,12 @@ fun AddList(viewModel: ListViewModel, navController: NavController, settingsView
         Image(
             painter = painterResource(id = R.drawable.done),
             contentDescription = "",
+            colorFilter = if (state.value.theme in listOf(
+                    0,
+                    1,
+                    3
+                )
+            ) ColorFilter.tint(Color.Black) else ColorFilter.tint(Color.White),
             modifier = Modifier
                 .clickable {
                     viewModel.changeIsAdd()
@@ -148,30 +159,37 @@ fun AddList(viewModel: ListViewModel, navController: NavController, settingsView
 }
 
 @Composable
-fun ListItem(item: ListTask, viewModel: ListViewModel, navController: NavController, settingsViewModel: SettingsViewModel) {
+fun ListItem(
+    item: ListTask,
+    viewModel: ListViewModel,
+    navController: NavController,
+    settingsViewModel: SettingsViewModel
+) {
     val state = settingsViewModel.stateSettings.collectAsState()
     val colorTheme = ColorTheme(state.value.theme)
-        Row(
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp, vertical = 15.dp)
+            .clickable {
+                viewModel.postItem(item, navController)
+            },
+        horizontalArrangement = Arrangement.spacedBy(15.dp)
+    ) {
+        Image(
+            modifier = Modifier.size(45.dp),
+            painter = painterResource(id = R.drawable.plan),
+            contentDescription = ""
+        )
+        Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 15.dp)
-                .clickable {
-                    viewModel.postItem(item, navController)
-                },
-            horizontalArrangement = Arrangement.spacedBy(15.dp)
-        ) {
-            Image(
-                modifier = Modifier.size(45.dp),
-                painter = painterResource(id = R.drawable.plan),
-                contentDescription = ""
-            )
-            Text(modifier = Modifier
                 .padding(5.dp)
                 .fillMaxWidth(),
-                text = item.name,
-                color = colorTheme.TextColorWhite,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,)
-        }
+            text = item.name,
+            color = colorTheme.TextColorWhite,
+            textAlign = TextAlign.Start,
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+        )
+    }
 }
