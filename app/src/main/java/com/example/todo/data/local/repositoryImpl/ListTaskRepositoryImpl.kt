@@ -15,4 +15,6 @@ class ListTaskRepositoryImpl @Inject constructor(
     suspend fun changeToDos(newToDos: List<ToDo>, id: Long) = listTaskRepository.changeToDos(newToDos, id)
 
     suspend fun getListTaskById(id: Long): ListTask = listTaskRepository.getListTaskById(id)
+
+    suspend fun deleteTask(id: Long) = listTaskRepository.deleteTask(id)
 }

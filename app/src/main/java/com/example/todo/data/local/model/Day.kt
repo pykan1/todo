@@ -16,12 +16,12 @@ data class Day(
     var toDos: List<ToDo> = emptyList()
 
 ) {
-    companion object {
-        private val motivationList =
-            listOf("Поверь в себя и во все, что ты есть. Знай, \nчто внутри тебя есть что-то больше \nлюбого препятствия.")
-    }
+//    companion object {
+//        private val motivationList =
+//            listOf("Поверь в себя и во все, что ты есть. Знай, \nчто внутри тебя есть что-то больше \nлюбого препятствия.")
+//    }
 
-    init {
-        motivation = motivationList[(motivationList.indices).random()]
-    }
+//    init {
+//        motivation = motivationList[(motivationList.indices).random()]
+//    }
 }

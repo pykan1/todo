@@ -1,5 +1,6 @@
 package com.example.todo.presentation.ui.component.ToDoRow
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,7 +39,7 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel:
     Row(
         modifier = Modifier
             .fillMaxWidth()
-                .padding(horizontal = 15.dp, vertical = 10.dp),
+            .padding(horizontal = 15.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Image(
@@ -42,17 +47,21 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel:
                 .size(25.dp)
                 .clickable {
                     mainViewModel?.let { viewModel.changeIsDone(mainViewModel = it) }
-                    calendarViewModel?.let {viewModel.changeIsDone(calendarViewModel = it) }
+                    calendarViewModel?.let { viewModel.changeIsDone(calendarViewModel = it) }
                     listItemViewModel?.let { viewModel.changeIsDone(listItemViewModel = it) }
-            },
+                },
             painter = painterResource(id = if (toDoState.done) R.drawable.done else R.drawable.notdone),
             contentDescription = "isDone"
         )
         Text(
             modifier = Modifier
-                .width(170.dp)
+                .width(150.dp)
                 .clickable {
-                    viewModel.changeIsPriority(mainViewModel = mainViewModel , calendarViewModel = calendarViewModel, listItemViewModel = listItemViewModel)
+                    viewModel.changeIsPriority(
+                        mainViewModel = mainViewModel,
+                        calendarViewModel = calendarViewModel,
+                        listItemViewModel = listItemViewModel
+                    )
                 },
             text = toDoState.title,
             fontSize = 16.sp,
@@ -65,12 +74,27 @@ fun ToDoRow(toDo: ToDo, mainViewModel: MainViewModel? = null, calendarViewModel:
                 painter = painterResource(id = R.drawable.star),
                 contentDescription = "Избранное",
                 modifier = Modifier
-                    .padding(start = 30.dp)
+                    .padding(start = 20.dp)
                     .size(25.dp)
                     .clickable {
-                        viewModel.changeIsPriority(mainViewModel = mainViewModel , calendarViewModel = calendarViewModel, listItemViewModel = listItemViewModel)
+                        viewModel.changeIsPriority(
+                            mainViewModel = mainViewModel,
+                            calendarViewModel = calendarViewModel,
+                            listItemViewModel = listItemViewModel
+                        )
                     }
             )
         }
+
+        Icon(
+            imageVector = Icons.Filled.Delete,
+            tint = Color.White,
+            contentDescription = "add",
+            modifier = Modifier.padding(start = 10.dp).size(25.dp).clickable {
+                calendarViewModel?.deleteToDo(toDo)
+                listItemViewModel?.deleteToDo(toDo)
+                mainViewModel?.deleteToDo(toDo)
+            }
+        )
     }
 }

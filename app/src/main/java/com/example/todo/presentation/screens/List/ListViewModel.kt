@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import com.example.todo.data.local.model.ListTask
 import com.example.todo.data.local.model.ToDo
 import com.example.todo.domain.usecase.ChangeToDosListTaskUseCase
+import com.example.todo.domain.usecase.DeleteTaskUseCase
 import com.example.todo.domain.usecase.GetAllListTaskUseCase
 import com.example.todo.domain.usecase.GetListTaskByIdUseCase
 import com.example.todo.domain.usecase.InsertListTaskUseCase
@@ -26,8 +27,7 @@ import javax.inject.Singleton
 class ListViewModel @Inject constructor(
     private val getAllListTaskUseCase: GetAllListTaskUseCase,
     private val insertListTaskUseCase: InsertListTaskUseCase,
-    private val changeToDosListTaskUseCase: ChangeToDosListTaskUseCase,
-    private val getListTaskByIdUseCase: GetListTaskByIdUseCase
+    private val deleteTaskUseCase: DeleteTaskUseCase
 ) : ViewModel() {
     val listTask = MutableLiveData<List<ListTask>>()
     var isAdd by mutableStateOf(false)
@@ -58,6 +58,14 @@ class ListViewModel @Inject constructor(
 
     fun changeIsAdd() {
         isAdd = !isAdd
+    }
+
+    fun deleteList(list: ListTask) {
+        viewModelScope.launch {
+            val newListTask = listTask.value?.filter { it != list }
+            deleteTaskUseCase.invoke(id = list.id)
+            listTask.postValue(newListTask)
+        }
     }
 
 

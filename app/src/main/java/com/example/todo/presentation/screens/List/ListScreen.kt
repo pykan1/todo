@@ -15,10 +15,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -184,12 +187,21 @@ fun ListItem(
         Text(
             modifier = Modifier
                 .padding(5.dp)
-                .fillMaxWidth(),
+                .width(150.dp),
             text = item.name,
             color = colorTheme.TextColorWhite,
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
+        )
+
+        Icon(
+            imageVector = Icons.Filled.Delete,
+            tint = colorTheme.TextColorWhite,
+            contentDescription = "add",
+            modifier = Modifier.padding(start = 20.dp).size(25.dp).clickable {
+                viewModel.deleteList(item)
+            }
         )
     }
 }

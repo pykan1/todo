@@ -20,4 +20,7 @@ interface ListTaskRepository {
 
     @Query("select * from listtask WHERE id=:id")
     suspend fun getListTaskById(id: Long): ListTask
+
+    @Query("delete from listtask where id=:id")
+    suspend fun deleteTask(id: Long)
 }

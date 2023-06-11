@@ -44,11 +44,13 @@ class CalendarViewModel @Inject constructor(
 
 
     fun getDate(dayOfMonth: Int): String {
-        val date = "$dayOfMonth-${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}".split("-").toMutableList()
-        if (date[0].length == 1 ) {
+        val date =
+            "$dayOfMonth-${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.YEAR)}".split("-")
+                .toMutableList()
+        if (date[0].length == 1) {
             date[0] = "0${date[0]}"
         }
-        if (date[1].length == 1 ) {
+        if (date[1].length == 1) {
             date[1] = "0${date[1]}"
         }
 
@@ -88,6 +90,15 @@ class CalendarViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteToDo(toDo: ToDo) {
+        viewModelScope.launch {
+            val newToDos = _toDos.value?.filter { it != toDo }
+            newToDos?.let { changeToDosUseCase.invoke(it, getDate(day)) }
+            _toDos.postValue(newToDos)
+        }
+    }
+
     fun updateToDo(toDo: ToDo) {
         viewModelScope.launch {
             //getDayByDateUseCase.invoke(date = currentDate)
@@ -106,7 +117,6 @@ class CalendarViewModel @Inject constructor(
     fun changeIsAdd() {
         isAdd = !isAdd
     }
-
 
 
 }

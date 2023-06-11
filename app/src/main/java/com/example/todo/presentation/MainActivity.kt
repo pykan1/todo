@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-                SetupNavHostScreen(navController = navController)
+            SetupNavHostScreen(navController = navController)
         }
     }
 }

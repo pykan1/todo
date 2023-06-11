@@ -77,7 +77,8 @@ fun ListItemToDo(navController: NavController, id: Long? = 0, settingsViewModel:
         ) {
             Text(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
                 text = "Список\n${listItemViewModel.name}",
                 color = colorTheme.TextColorWhite,
                 textAlign = TextAlign.Center,
@@ -91,7 +92,7 @@ fun ListItemToDo(navController: NavController, id: Long? = 0, settingsViewModel:
                 modifier = Modifier
                     .padding(7.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(Color.LightGray),
+                    .background(colorTheme.BasicBox),
             ) {
                 itemsIndexed(
                     toDos

@@ -41,6 +41,14 @@ class ListItemViewModel @Inject constructor(
         isAdd = !isAdd
     }
 
+    fun deleteToDo(toDo: ToDo) {
+        viewModelScope.launch {
+            val newToDos = toDos.value?.filter { it != toDo }
+            newToDos?.let { changeToDosListTaskUseCase.invoke(it, id) }
+            toDos.postValue(newToDos)
+        }
+    }
+
     fun addToDo(title: String) {
         viewModelScope.launch {
             getListTaskByIdUseCase.invoke(id).let {
